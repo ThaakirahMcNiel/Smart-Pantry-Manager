@@ -64,7 +64,8 @@ public class AddIngredientActivity extends AppCompatActivity {
                             cursor.getColumnIndexOrThrow(
                                     PantryDatabaseHelper.COL_EXPIRY));
 
-                    editIngredientExpiry.setText(expiry == null ? "" : expiry);
+                    editIngredientExpiry.setText(
+                            expiry == null ? "" : expiry);
                 }
             }
         } finally {
