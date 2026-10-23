@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.database.Cursor;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -33,44 +34,41 @@ public class AddIngredientActivity extends AppCompatActivity {
 
         if (ingredientId != -1) {
             setTitle("Edit Ingredient");
-            btnSave.setText("Update Ingredient");
+            btnSave.setText(R.string.update_ingredient);
             loadIngredientDetails();
         }
 
         btnSave.setOnClickListener(v -> saveIngredient());
         btnCancel.setOnClickListener(v -> finish());
     }
-
     private void loadIngredientDetails() {
-        try (android.database.Cursor cursor =
-                     new PantryDatabaseHelper(this)
-                             .getPantryItemById(ingredientId)) {
+        PantryDatabaseHelper helper = new PantryDatabaseHelper(this);
 
-            if (cursor.moveToFirst()) {
-                editIngredientName.setText(
-                        cursor.getString(cursor.getColumnIndexOrThrow(
-                                PantryDatabaseHelper.COL_NAME))
-                );
+        try {
+            try (Cursor cursor = helper.getPantryItemById(ingredientId)) {
+                if (cursor != null && cursor.moveToFirst()) {
+                    editIngredientName.setText(
+                            cursor.getString(cursor.getColumnIndexOrThrow(
+                                    PantryDatabaseHelper.COL_NAME)));
 
-                editIngredientQuantity.setText(
-                        String.valueOf(cursor.getDouble(
-                                cursor.getColumnIndexOrThrow(
-                                        PantryDatabaseHelper.COL_QUANTITY)))
-                );
+                    editIngredientQuantity.setText(
+                            String.valueOf(cursor.getDouble(
+                                    cursor.getColumnIndexOrThrow(
+                                            PantryDatabaseHelper.COL_QUANTITY))));
 
-                editIngredientUnit.setText(
-                        cursor.getString(cursor.getColumnIndexOrThrow(
-                                PantryDatabaseHelper.COL_UNIT))
-                );
+                    editIngredientUnit.setText(
+                            cursor.getString(cursor.getColumnIndexOrThrow(
+                                    PantryDatabaseHelper.COL_UNIT)));
 
-                String expiry = cursor.getString(
-                        cursor.getColumnIndexOrThrow(
-                                PantryDatabaseHelper.COL_EXPIRY));
+                    String expiry = cursor.getString(
+                            cursor.getColumnIndexOrThrow(
+                                    PantryDatabaseHelper.COL_EXPIRY));
 
-                editIngredientExpiry.setText(
-                        expiry == null ? "" : expiry
-                );
+                    editIngredientExpiry.setText(expiry == null ? "" : expiry);
+                }
             }
+        } finally {
+            helper.close();
         }
     }
     private void saveIngredient() {

@@ -19,5 +19,6 @@
     <string name="expiry_date_label">Expiry date (optional)</string>
     <string name="expiry_date_hint">YYYY-MM-DD</string>
     <string name="save_ingredient">Save Ingredient</string>
+    <string name="update_ingredient">Update Ingredient</string>
     <string name="cancel">Cancel</string>
 </resources>
