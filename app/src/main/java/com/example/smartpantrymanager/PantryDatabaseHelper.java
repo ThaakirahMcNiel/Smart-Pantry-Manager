@@ -7,7 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class PantryDatabaseHelper extends SQLiteOpenHelper {
+public class PantryDatabaseHelper extends SQLiteOpenHelper implements AutoCloseable {
 
     private static final String DATABASE_NAME = "smart_pantry.db";
     private static final int DATABASE_VERSION = 1;
