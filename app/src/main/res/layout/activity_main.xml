@@ -29,6 +29,14 @@
         android:layout_height="wrap_content"
         android:text="@string/add_ingredient"
         android:textAllCaps="false" />
+    <Button
+        android:id="@+id/btnSuggestedRecipes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/suggested_recipes_button"
+        android:textAllCaps="false"
+        android:layout_marginBottom="12dp"
+    />
 
     <TextView
         android:layout_width="match_parent"
