@@ -30,6 +30,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Button btnSuggestedRecipes = findViewById(R.id.btnSuggestedRecipes);
+
+        btnSuggestedRecipes.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, SuggestedRecipesActivity.class);
+            startActivity(intent);
+        });
+
         Button btnAddIngredient = findViewById(R.id.btnAddIngredient);
         listPantry = findViewById(R.id.listPantry);
         txtEmptyPantry = findViewById(R.id.txtEmptyPantry);

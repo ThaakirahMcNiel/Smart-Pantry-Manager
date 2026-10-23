@@ -20,5 +20,6 @@
     <string name="expiry_date_hint">YYYY-MM-DD</string>
     <string name="save_ingredient">Save Ingredient</string>
     <string name="update_ingredient">Update Ingredient</string>
+    <string name="suggested_recipes_button">Suggested Recipes</string>
     <string name="cancel">Cancel</string>
 </resources>
