@@ -6,6 +6,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import java.util.ArrayList;
+import java.util.Locale;
 
 public class PantryDatabaseHelper extends SQLiteOpenHelper implements AutoCloseable {
 
@@ -210,5 +212,90 @@ public class PantryDatabaseHelper extends SQLiteOpenHelper implements AutoClosea
         } finally {
             db.endTransaction();
         }
+    }
+    public ArrayList<String> getMatchingRecipes() {
+        ArrayList<String> matchingRecipes = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+
+        String recipeQuery = "SELECT id, name FROM recipes";
+
+        try (Cursor recipesCursor = db.rawQuery(recipeQuery, null)) {
+            while (recipesCursor.moveToNext()) {
+                int recipeId = recipesCursor.getInt(0);
+                String recipeName = recipesCursor.getString(1);
+                boolean allIngredientsAvailable = true;
+
+                String ingredientQuery =
+                        "SELECT ingredient_name, required_quantity, unit " +
+                                "FROM recipe_ingredients WHERE recipe_id = ?";
+
+                try (Cursor ingredientsCursor = db.rawQuery(
+                        ingredientQuery,
+                        new String[]{String.valueOf(recipeId)})) {
+
+                    while (ingredientsCursor.moveToNext()) {
+                        String requiredName = ingredientsCursor.getString(0);
+                        double requiredQuantity = ingredientsCursor.getDouble(1);
+                        String requiredUnit = ingredientsCursor.getString(2);
+
+                        double availableQuantity = 0;
+
+                        try (Cursor pantryCursor = db.rawQuery(
+                                "SELECT name, quantity, unit FROM pantry_items",
+                                null)) {
+
+                            while (pantryCursor.moveToNext()) {
+                                String pantryName = pantryCursor.getString(0);
+                                double pantryQuantity = pantryCursor.getDouble(1);
+                                String pantryUnit = pantryCursor.getString(2);
+
+                                if (normaliseIngredient(pantryName).equals(
+                                        normaliseIngredient(requiredName))
+                                        && normaliseUnit(pantryUnit).equals(
+                                        normaliseUnit(requiredUnit))) {
+                                    availableQuantity += pantryQuantity;
+                                }
+                            }
+                        }
+
+                        if (availableQuantity < requiredQuantity) {
+                            allIngredientsAvailable = false;
+                            break;
+                        }
+                    }
+                }
+
+                if (allIngredientsAvailable) {
+                    matchingRecipes.add(recipeName);
+                }
+            }
+        }
+
+        return matchingRecipes;
+    }
+
+    private String normaliseIngredient(String name) {
+        String value = name.trim().toLowerCase(Locale.ROOT);
+
+        if (value.endsWith("ies") && value.length() > 3) {
+            return value.substring(0, value.length() - 3) + "y";
+        }
+
+        if (value.endsWith("s") && !value.endsWith("ss")
+                && value.length() > 1) {
+            return value.substring(0, value.length() - 1);
+        }
+
+        return value;
+    }
+
+    private String normaliseUnit(String unit) {
+        String value = unit.trim().toLowerCase(Locale.ROOT);
+
+        if (value.endsWith("s") && value.length() > 1) {
+            return value.substring(0, value.length() - 1);
+        }
+
+        return value;
     }
 }
