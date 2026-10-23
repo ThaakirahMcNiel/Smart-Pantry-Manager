@@ -85,7 +85,19 @@ public class PantryDatabaseHelper extends SQLiteOpenHelper {
                 COL_NAME + " COLLATE NOCASE ASC"
         );
     }
+    public Cursor getPantryItemById(int id) {
+        SQLiteDatabase db = getReadableDatabase();
 
+        return db.query(
+                TABLE_PANTRY,
+                null,
+                COL_ID + " = ?",
+                new String[]{String.valueOf(id)},
+                null,
+                null,
+                null
+        );
+    }
     public int updatePantryItem(int id, String name,
                                 double quantity, String unit,
                                 String expiryDate) {
@@ -102,12 +114,101 @@ public class PantryDatabaseHelper extends SQLiteOpenHelper {
                 new String[]{String.valueOf(id)}
         );
     }
-
     public int deletePantryItem(int id) {
         return getWritableDatabase().delete(
                 TABLE_PANTRY,
                 COL_ID + " = ?",
                 new String[]{String.valueOf(id)}
         );
+    }
+    public void seedRecipes() {
+        SQLiteDatabase db = getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(
+                "SELECT COUNT(*) FROM recipes", null);
+
+        int count = 0;
+
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+
+        if (count > 0) {
+            return;
+        }
+
+        db.beginTransaction();
+
+        try {
+            String[][] recipes = {
+                    {"Vegetable Fried Rice", "Cook rice. Stir-fry vegetables, add rice and soy sauce."},
+                    {"Tomato Pasta", "Boil pasta. Cook tomatoes with garlic and mix with pasta."},
+                    {"Pancakes", "Mix flour, milk and egg. Cook portions in a lightly oiled pan."},
+                    {"Omelette", "Beat eggs and cook in a pan. Add cheese if available."},
+                    {"Banana Smoothie", "Blend banana and milk until smooth."},
+                    {"Peanut Butter Toast", "Toast bread and spread peanut butter."},
+                    {"Garlic Rice", "Cook rice and stir-fry with garlic and oil."},
+                    {"Cheese Sandwich", "Place cheese between bread slices and toast."},
+                    {"Tomato Egg Scramble", "Cook chopped tomatoes, add beaten eggs and stir."},
+                    {"Simple Salad", "Chop cucumber and tomato, then mix together."},
+                    {"French Toast", "Dip bread in beaten egg and milk, then fry."},
+                    {"Milk Porridge", "Cook oats in milk until thick."},
+                    {"Flour Flatbread", "Mix flour and water, shape dough and cook in a pan."},
+                    {"Egg Fried Rice", "Stir-fry cooked rice with egg and vegetables."},
+                    {"Banana Pancakes", "Mash banana, mix with egg and flour, then fry."},
+                    {"Tomato Cheese Toast", "Add tomato and cheese to bread and toast."},
+                    {"Peanut Banana Toast", "Spread peanut butter on bread and add banana slices."},
+                    {"Garlic Pasta", "Boil pasta and toss with cooked garlic and oil."},
+                    {"Cucumber Sandwich", "Place sliced cucumber between bread slices."},
+                    {"Oat Banana Bowl", "Mix oats, banana and milk in a bowl."}
+            };
+
+            String[][][] ingredients = {
+                    {{"rice", "1", "cup"}, {"vegetables", "1", "cup"}, {"soy sauce", "1", "tbsp"}},
+                    {{"pasta", "1", "cup"}, {"tomato", "2", "items"}, {"garlic", "1", "clove"}},
+                    {{"flour", "1", "cup"}, {"milk", "1", "cup"}, {"egg", "1", "item"}},
+                    {{"egg", "2", "items"}},
+                    {{"banana", "1", "item"}, {"milk", "1", "cup"}},
+                    {{"bread", "2", "slices"}, {"peanut butter", "1", "tbsp"}},
+                    {{"rice", "1", "cup"}, {"garlic", "1", "clove"}, {"oil", "1", "tbsp"}},
+                    {{"bread", "2", "slices"}, {"cheese", "1", "slice"}},
+                    {{"tomato", "1", "item"}, {"egg", "2", "items"}},
+                    {{"cucumber", "1", "item"}, {"tomato", "1", "item"}},
+                    {{"bread", "2", "slices"}, {"egg", "1", "item"}, {"milk", "0.25", "cup"}},
+                    {{"oats", "0.5", "cup"}, {"milk", "1", "cup"}},
+                    {{"flour", "1", "cup"}, {"water", "0.5", "cup"}},
+                    {{"rice", "1", "cup"}, {"egg", "1", "item"}, {"vegetables", "1", "cup"}},
+                    {{"banana", "1", "item"}, {"egg", "1", "item"}, {"flour", "0.5", "cup"}},
+                    {{"bread", "2", "slices"}, {"tomato", "1", "item"}, {"cheese", "1", "slice"}},
+                    {{"bread", "2", "slices"}, {"peanut butter", "1", "tbsp"}, {"banana", "1", "item"}},
+                    {{"pasta", "1", "cup"}, {"garlic", "1", "clove"}, {"oil", "1", "tbsp"}},
+                    {{"bread", "2", "slices"}, {"cucumber", "0.5", "item"}},
+                    {{"oats", "0.5", "cup"}, {"banana", "1", "item"}, {"milk", "0.5", "cup"}}
+            };
+
+            for (int i = 0; i < recipes.length; i++) {
+                ContentValues recipeValues = new ContentValues();
+                recipeValues.put("name", recipes[i][0]);
+                recipeValues.put("instructions", recipes[i][1]);
+
+                long recipeId = db.insert("recipes", null, recipeValues);
+
+                for (String[] ingredient : ingredients[i]) {
+                    ContentValues ingredientValues = new ContentValues();
+                    ingredientValues.put("recipe_id", recipeId);
+                    ingredientValues.put("ingredient_name", ingredient[0]);
+                    ingredientValues.put("required_quantity",
+                            Double.parseDouble(ingredient[1]));
+                    ingredientValues.put("unit", ingredient[2]);
+
+                    db.insert("recipe_ingredients", null, ingredientValues);
+                }
+            }
+
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
     }
 }
