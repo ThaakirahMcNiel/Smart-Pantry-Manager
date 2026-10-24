@@ -22,4 +22,7 @@
     <string name="update_ingredient">Update Ingredient</string>
     <string name="suggested_recipes_button">Suggested Recipes</string>
     <string name="cancel">Cancel</string>
+    <string name="recipe_ingredients_title">Ingredients</string>
+    <string name="recipe_method_title">Preparation Method</string>
+    <string name="recipe_back">Back</string>
 </resources>
