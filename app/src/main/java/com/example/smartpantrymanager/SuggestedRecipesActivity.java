@@ -38,7 +38,22 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
                 android.R.layout.simple_list_item_1,
                 recipeNames
         );
+
         listSuggestedRecipes.setAdapter(adapter);
+        listSuggestedRecipes.setOnItemClickListener((parent, view, position, id) ->{
+            String selectedRecipe = recipeNames.get(position);
+            int recipeId = databaseHelper.getRecipeIdByName(selectedRecipe);
+
+            if(recipeId != -1){
+                Intent intent = new Intent(
+                        SuggestedRecipesActivity.this,
+                        RecipeDetailActivity.class
+                );
+                intent.putExtra("recipe_id", recipeId);
+                startActivity(intent);
+            }
+        });
+
         btnBackToPantry.setOnClickListener(v -> finish());
         loadSuggestedRecipes();
     }
