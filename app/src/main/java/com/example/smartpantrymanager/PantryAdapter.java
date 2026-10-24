@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -16,8 +18,9 @@ public class PantryAdapter extends ArrayAdapter<PantryItem> {
         super(context, 0, items);
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext())
                     .inflate(R.layout.item_pantry, parent, false);

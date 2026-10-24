@@ -26,28 +26,54 @@ public class RecipeDetailActivity extends AppCompatActivity {
         int recipeId = getIntent().getIntExtra("recipe_id", -1);
 
         if (recipeId != -1) {
-            loadRecipe(recipeId, txtRecipeTitle, txtIngredients, txtInstructions);
+            loadRecipe(
+                    recipeId,
+                    txtRecipeTitle,
+                    txtIngredients,
+                    txtInstructions
+            );
         }
 
         btnBack.setOnClickListener(v -> finish());
     }
 
-    private void loadRecipe(int recipeId,
-                            TextView txtRecipeTitle,
-                            TextView txtIngredients,
-                            TextView txtInstructions) {
+    private void loadRecipe(
+            int recipeId,
+            TextView txtRecipeTitle,
+            TextView txtIngredients,
+            TextView txtInstructions) {
 
         try (Cursor recipeCursor = databaseHelper.getRecipeById(recipeId)) {
-
             if (recipeCursor.moveToFirst()) {
                 txtRecipeTitle.setText(recipeCursor.getString(1));
-                txtInstructions.setText(recipeCursor.getString(2));
+
+                String instructions = recipeCursor.getString(2);
+                String[] steps = instructions.split("\\n");
+
+                StringBuilder numberedSteps = new StringBuilder();
+                int stepNumber = 1;
+
+                for (String rawStep : steps) {
+                    String step = rawStep.trim();
+
+                    if (!step.isEmpty()) {
+                        numberedSteps.append(stepNumber)
+                                .append(". ")
+                                .append(step)
+                                .append("\n\n");
+
+                        stepNumber++;
+                    }
+                }
+
+                txtInstructions.setText(numberedSteps.toString().trim());
             }
         }
 
         StringBuilder ingredientsText = new StringBuilder();
 
-        try (Cursor ingredientCursor = databaseHelper.getRecipeIngredients(recipeId)) {
+        try (Cursor ingredientCursor =
+                     databaseHelper.getRecipeIngredients(recipeId)) {
 
             while (ingredientCursor.moveToNext()) {
                 ingredientsText.append("• ")
@@ -60,12 +86,15 @@ public class RecipeDetailActivity extends AppCompatActivity {
             }
         }
 
-        txtIngredients.setText(ingredientsText.toString());
+        txtIngredients.setText(ingredientsText.toString().trim());
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        databaseHelper.close();
+
+        if (databaseHelper != null) {
+            databaseHelper.close();
+        }
     }
 }
