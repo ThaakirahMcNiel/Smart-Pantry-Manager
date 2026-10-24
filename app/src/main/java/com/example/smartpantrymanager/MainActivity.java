@@ -37,6 +37,13 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        Button btnSettings = findViewById(R.id.btnSettings);
+
+        btnSettings.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
+        });
+
         Button btnAddIngredient = findViewById(R.id.btnAddIngredient);
         listPantry = findViewById(R.id.listPantry);
         txtEmptyPantry = findViewById(R.id.txtEmptyPantry);
