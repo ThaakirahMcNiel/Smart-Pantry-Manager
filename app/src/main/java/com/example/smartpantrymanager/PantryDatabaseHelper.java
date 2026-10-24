@@ -273,7 +273,23 @@ public class PantryDatabaseHelper extends SQLiteOpenHelper implements AutoClosea
 
         return matchingRecipes;
     }
+    public Cursor getRecipeById(int recipeId) {
+        SQLiteDatabase db = getReadableDatabase();
 
+        return db.rawQuery(
+                "SELECT id, name, instructions FROM recipes WHERE id = ?",
+                new String[]{String.valueOf(recipeId)}
+        );
+    }
+    public Cursor getRecipeIngredients(int recipeId) {
+        SQLiteDatabase db = getReadableDatabase();
+
+        return db.rawQuery(
+                "SELECT ingredient_name, required_quantity, unit " +
+                        "FROM recipe_ingredients WHERE recipe_id = ?",
+                new String[]{String.valueOf(recipeId)}
+        );
+    }
     private String normaliseIngredient(String name) {
         String value = name.trim().toLowerCase(Locale.ROOT);
 
