@@ -4,13 +4,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.app.AlertDialog;
-import android.widget.AdapterView;
-
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,9 +17,8 @@ public class MainActivity extends AppCompatActivity {
     private PantryDatabaseHelper databaseHelper;
     private ListView listPantry;
     private TextView txtEmptyPantry;
-    private ArrayAdapter<String> adapter;
-    private final ArrayList<String> pantryItems = new ArrayList<>();
-    private final ArrayList<Integer> pantryIds = new ArrayList<>();
+    private PantryAdapter adapter;
+    private final ArrayList<PantryItem> pantryItems = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,40 +46,18 @@ public class MainActivity extends AppCompatActivity {
         databaseHelper = new PantryDatabaseHelper(this);
         databaseHelper.seedRecipes();
 
-        adapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_list_item_1,
-                pantryItems
-        );
-
+        adapter = new PantryAdapter(this, pantryItems);
         listPantry.setAdapter(adapter);
 
-        listPantry.setOnItemLongClickListener((parent, view, position, id) -> {
-            int ingredientId = pantryIds.get(position);
-            String ingredientName = pantryItems.get(position);
-
-            new AlertDialog.Builder(MainActivity.this)
-                    .setTitle("Delete ingredient")
-                    .setMessage("Delete this ingredient?\n\n" + ingredientName)
-                    .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
-                    .setPositiveButton("Delete", (dialog, which) -> {
-                        databaseHelper.deletePantryItem(ingredientId);
-                        loadPantryItems();
-                    })
-                    .show();
-
-            return true;
-        });
-
         listPantry.setOnItemClickListener((parent, view, position, id) -> {
-            int ingredientId = pantryIds.get(position);
+            PantryItem item = pantryItems.get(position);
 
             Intent intent = new Intent(
                     MainActivity.this,
                     AddIngredientActivity.class
             );
 
-            intent.putExtra("ingredient_id", ingredientId);
+            intent.putExtra("ingredient_id", item.getId());
             startActivity(intent);
         });
 
@@ -105,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadPantryItems() {
         pantryItems.clear();
-        pantryIds.clear();
 
         try (Cursor cursor = databaseHelper.getAllPantryItems()) {
             while (cursor.moveToNext()) {
@@ -114,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                                 PantryDatabaseHelper.COL_ID
                         )
                 );
-                pantryIds.add(ingredientId);
+
                 String name = cursor.getString(
                         cursor.getColumnIndexOrThrow(
                                 PantryDatabaseHelper.COL_NAME
@@ -134,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 );
 
                 pantryItems.add(
-                        name + "\nQuantity: " + quantity + " " + unit
+                        new PantryItem(ingredientId, name, quantity, unit)
                 );
             }
         }
@@ -142,9 +114,11 @@ public class MainActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
 
         boolean isEmpty = pantryItems.isEmpty();
+
         txtEmptyPantry.setVisibility(
                 isEmpty ? View.VISIBLE : View.GONE
         );
+
         listPantry.setVisibility(
                 isEmpty ? View.GONE : View.VISIBLE
         );
