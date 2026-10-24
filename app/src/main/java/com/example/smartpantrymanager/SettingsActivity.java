@@ -16,18 +16,13 @@ public class SettingsActivity extends AppCompatActivity {
     private EditText editProfileName;
     private Spinner spinnerDietaryPreference;
     private SharedPreferences preferences;
-
-    private final String[] dietaryOptions = {
-            "No Preference",
-            "Vegetarian",
-            "Vegan",
-            "Gluten-Free"
-    };
+    private String[] dietaryOptions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        dietaryOptions = getResources().getStringArray(R.array.dietary_options);
 
         editProfileName = findViewById(R.id.editProfileName);
         spinnerDietaryPreference = findViewById(R.id.spinnerDietaryPreference);
