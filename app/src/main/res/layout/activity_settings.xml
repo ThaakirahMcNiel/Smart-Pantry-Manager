@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="#F7F9F4">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_title"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="#26382B"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/profile_subtitle"
+            android:textSize="16sp"
+            android:layout_marginBottom="24dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/profile_name_label"
+            android:textStyle="bold"
+            android:layout_marginBottom="6dp" />
+
+        <EditText
+            android:id="@+id/editProfileName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/profile_name_hint"
+            android:inputType="textPersonName"
+            android:singleLine="true"
+            android:autofillHints="name" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dietary_preference_label"
+            android:textStyle="bold"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="6dp" />
+
+        <Spinner
+            android:id="@+id/spinnerDietaryPreference"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btnSaveSettings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/save_settings"
+            android:layout_marginTop="24dp" />
+
+        <Button
+            android:id="@+id/btnBackSettings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_back"
+            android:layout_marginTop="8dp" />
+
+    </LinearLayout>
+</ScrollView>
