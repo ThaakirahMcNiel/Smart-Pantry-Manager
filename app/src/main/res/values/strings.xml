@@ -25,4 +25,18 @@
     <string name="recipe_ingredients_title">Ingredients</string>
     <string name="recipe_method_title">Preparation Method</string>
     <string name="recipe_back">Back</string>
+    <string name="settings_title">Settings &amp; Profile</string>
+    <string name="profile_subtitle">Manage your Smart Pantry Manager preferences.</string>
+    <string name="profile_name_label">Your Name</string>
+    <string name="profile_name_hint">Enter your name</string>
+    <string name="dietary_preference_label">Dietary Preference</string>
+    <string name="save_settings">Save Settings</string>
+    <string name="settings_back">Back</string>
+    <string name="dietary_all">No Preference</string>
+    <string name="dietary_vegetarian">Vegetarian</string>
+    <string name="dietary_vegan">Vegan</string>
+    <string name="dietary_gluten_free">Gluten-Free</string>
+    <string name="settings_saved">Settings saved successfully.</string>
+    <string name="profile_name_required">Please enter your name.</string>
+
 </resources>
