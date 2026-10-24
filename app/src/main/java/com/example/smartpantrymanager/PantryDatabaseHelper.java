@@ -304,7 +304,6 @@ public class PantryDatabaseHelper extends SQLiteOpenHelper implements AutoClosea
 
         return value;
     }
-
     private String normaliseUnit(String unit) {
         String value = unit.trim().toLowerCase(Locale.ROOT);
 
@@ -313,5 +312,19 @@ public class PantryDatabaseHelper extends SQLiteOpenHelper implements AutoClosea
         }
 
         return value;
+    }
+    public int getRecipeIdByName(String recipeName) {
+        SQLiteDatabase db = getReadableDatabase();
+
+        try (Cursor cursor = db.rawQuery(
+                "SELECT id FROM recipes WHERE name = ?",
+                new String[]{recipeName})) {
+
+            if (cursor.moveToFirst()) {
+                return cursor.getInt(0);
+            }
+        }
+
+        return -1;
     }
 }
