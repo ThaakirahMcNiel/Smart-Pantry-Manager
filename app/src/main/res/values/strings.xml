@@ -38,5 +38,11 @@
     <string name="dietary_gluten_free">Gluten-Free</string>
     <string name="settings_saved">Settings saved successfully.</string>
     <string name="profile_name_required">Please enter your name.</string>
+    <string-array name="dietary_options">
+        <item>@string/dietary_all</item>
+        <item>@string/dietary_vegetarian</item>
+        <item>@string/dietary_vegan</item>
+        <item>@string/dietary_gluten_free</item>
+    </string-array>
 
 </resources>
