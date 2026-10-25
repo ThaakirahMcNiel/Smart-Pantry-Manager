@@ -22,6 +22,9 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".PantryActivity"
+            android:exported="false" />
+        <activity
             android:name=".AddIngredientActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />

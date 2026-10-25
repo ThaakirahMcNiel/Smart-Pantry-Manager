@@ -9,6 +9,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 
@@ -23,51 +28,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_home);
 
-        Button btnSuggestedRecipes = findViewById(R.id.btnSuggestedRecipes);
+        android.widget.Button btnOpenDrawer =
+                findViewById(R.id.btnHomeOpenDrawer);
 
-        btnSuggestedRecipes.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, SuggestedRecipesActivity.class);
-            startActivity(intent);
-        });
-
-        Button btnSettings = findViewById(R.id.btnSettings);
-
-        btnSettings.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-            startActivity(intent);
-        });
-
-        Button btnAddIngredient = findViewById(R.id.btnAddIngredient);
-        listPantry = findViewById(R.id.listPantry);
-        txtEmptyPantry = findViewById(R.id.txtEmptyPantry);
-
-        databaseHelper = new PantryDatabaseHelper(this);
-        databaseHelper.seedRecipes();
-        databaseHelper.replaceWithCapeMalayRecipes();
-        databaseHelper.updateRecipeInstructions();
-
-        adapter = new PantryAdapter(this, pantryItems);
-        listPantry.setAdapter(adapter);
-
-        listPantry.setOnItemClickListener((parent, view, position, id) -> {
-            PantryItem item = pantryItems.get(position);
-
-            Intent intent = new Intent(
-                    MainActivity.this,
-                    AddIngredientActivity.class
-            );
-
-            intent.putExtra("ingredient_id", item.getId());
-            startActivity(intent);
-        });
-
-        btnAddIngredient.setOnClickListener(v -> {
-            Intent intent = new Intent(
-                    MainActivity.this,
-                    AddIngredientActivity.class
-            );
+        btnOpenDrawer.setOnClickListener(v -> {
+            android.content.Intent intent =
+                    new android.content.Intent(
+                            MainActivity.this,
+                            PantryActivity.class
+                    );
+            intent.putExtra("open_drawer", true);
             startActivity(intent);
         });
     }
@@ -75,7 +47,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        loadPantryItems();
+
+        if (databaseHelper != null && adapter != null){
+            loadPantryItems();
+        }
     }
 
     private void loadPantryItems() {
@@ -114,6 +89,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         adapter.notifyDataSetChanged();
+
+        android.util.Log.d("PANTRY_DEBUG",
+                "Pantry loaded. Item count: " + pantryItems.size());
 
         boolean isEmpty = pantryItems.isEmpty();
 
