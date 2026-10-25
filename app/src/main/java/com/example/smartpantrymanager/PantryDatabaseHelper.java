@@ -431,6 +431,13 @@ public class PantryDatabaseHelper extends SQLiteOpenHelper implements AutoClosea
                                 double pantryQuantity = pantryCursor.getDouble(1);
                                 String pantryUnit = pantryCursor.getString(2);
 
+                                android.util.Log.d(
+                                        "RecipeDebug",
+                                        "Pantry item: [" + pantryName + "]"
+                                                + ", quantity: " + pantryQuantity
+                                                + ", unit: [" + pantryUnit + "]"
+                                );
+
                                 if (normaliseIngredient(pantryName).equals(
                                         normaliseIngredient(requiredName))
                                         && normaliseUnit(pantryUnit).equals(
@@ -446,6 +453,13 @@ public class PantryDatabaseHelper extends SQLiteOpenHelper implements AutoClosea
                                 convertToBaseQuantity(requiredQuantity, requiredUnit);
 
                         if (availableQuantity < requiredBaseQuantity) {
+                            android.util.Log.d(
+                                    "RecipeDebug",
+                                    recipeName + " missing: " + requiredName
+                                            + ", needs " + requiredQuantity + " " + requiredUnit
+                                            + ", available base quantity: " + availableQuantity
+                            );
+
                             allIngredientsAvailable = false;
                             break;
                         }
@@ -490,6 +504,20 @@ public class PantryDatabaseHelper extends SQLiteOpenHelper implements AutoClosea
             case "milliliters":
                 return quantity;
 
+            case "cup":
+            case"cups":
+                return quantity * 240;
+
+            case "tbsp":
+            case "tablespoon":
+            case "tablespoons":
+                return quantity * 15;
+
+            case "tsp":
+            case "teaspoon":
+            case "teaspoons":
+                return quantity * 5;
+
             default:
                 return quantity;
         }
@@ -525,10 +553,12 @@ public class PantryDatabaseHelper extends SQLiteOpenHelper implements AutoClosea
 
         return value;
     }
+
     private String normaliseUnit(String unit) {
         String value = unit.trim().toLowerCase(Locale.ROOT);
 
         switch (value) {
+            // Weight units
             case "kilogram":
             case "kilograms":
             case "kgs":
@@ -539,6 +569,7 @@ public class PantryDatabaseHelper extends SQLiteOpenHelper implements AutoClosea
             case "g":
                 return "weight";
 
+            // Volume units: all can be converted to millilitres
             case "litre":
             case "litres":
             case "liter":
@@ -549,22 +580,17 @@ public class PantryDatabaseHelper extends SQLiteOpenHelper implements AutoClosea
             case "milliliter":
             case "milliliters":
             case "ml":
-                return "volume";
-
+            case "cup":
+            case "cups":
             case "tablespoon":
             case "tablespoons":
             case "tbsp":
-                return "tbsp";
-
             case "teaspoon":
             case "teaspoons":
             case "tsp":
-                return "tsp";
+                return "volume";
 
-            case "cup":
-            case "cups":
-                return "cup";
-
+            // Count-based units remain separate
             case "item":
             case "items":
                 return "item";
@@ -577,10 +603,23 @@ public class PantryDatabaseHelper extends SQLiteOpenHelper implements AutoClosea
             case "slices":
                 return "slice";
 
+            case "stick":
+            case "sticks":
+                return "stick";
+
+            case "sheet":
+            case "sheets":
+                return "sheet";
+
+            case "shell":
+            case "shells":
+                return "shell";
+
             default:
                 return value;
         }
     }
+
     public int getRecipeIdByName(String recipeName) {
         SQLiteDatabase db = getReadableDatabase();
 
@@ -636,7 +675,7 @@ public class PantryDatabaseHelper extends SQLiteOpenHelper implements AutoClosea
                 {"Sugar Bean Bredie",
                         "Heat oil and soften the onion with garlic and curry powder.\nAdd chopped tomatoes and cook until soft.\nAdd cooked sugar beans and a little water.\nSimmer until the sauce thickens and the flavours combine.\nSeason and serve warm."},
 
-                {"Yellow Rice with Raisins",
+                {"Sweet Yellow Rice",
                         "Rinse the rice until the water runs mostly clear.\nAdd rice, water, turmeric, cinnamon, sugar, raisins and a little salt to a pot.\nBring to a boil, then reduce the heat and cover.\nCook until the rice is tender and the liquid is absorbed.\nFluff gently with a fork."},
 
                 {"Cinnamon Pumpkin",
@@ -653,9 +692,6 @@ public class PantryDatabaseHelper extends SQLiteOpenHelper implements AutoClosea
 
                 {"Cape Malay Milk Tart",
                         "Prepare and bake a pastry shell until lightly golden.\nHeat milk with cinnamon until warm.\nWhisk eggs, sugar, flour and cornflour in a bowl.\nGradually whisk in the warm milk, then return the mixture to the saucepan.\nStir over low heat until thick, pour into the shell and sprinkle with cinnamon. Chill until set."},
-
-                {"Sweet Yellow Rice",
-                        "Rinse the rice well.\nAdd rice, water, turmeric, cinnamon, sugar, raisins and a little salt to a saucepan.\nBring to a boil, then cover and cook over low heat until tender.\nStir in a little butter if desired.\nFluff gently and serve warm."},
 
                 {"Cape Malay Sago Pudding",
                         "Soak the sago in water for about 30 minutes, then drain.\nHeat milk with cinnamon and add the sago.\nSimmer gently, stirring often, until the pearls become mostly translucent.\nStir in sugar and beaten egg gradually, keeping the heat low.\nCook until creamy and serve warm or chilled with cinnamon."}
@@ -676,11 +712,10 @@ public class PantryDatabaseHelper extends SQLiteOpenHelper implements AutoClosea
                 {{"sugar beans","2","cups"},{"onion","1","item"},{"tomato","2","items"},{"garlic","2","cloves"},{"curry powder","1","tbsp"},{"oil","1","tbsp"}},
                 {{"rice","1","cup"},{"raisins","0.25","cup"},{"turmeric","0.5","tsp"},{"cinnamon","1","stick"},{"sugar","1","tbsp"}},
                 {{"pumpkin","500","g"},{"cinnamon","1","tsp"},{"brown sugar","2","tbsp"}},
-                {{"pumpkin","2","cups"},{"flour","1","cup"},{"egg","1","item"},{"sugar","2","tbsp"},{"cinnamon","1","tsp"},{"baking powder","1","tsp"},{"oil","2","tbsp"}},
+                {{"pumpkin","0.5","kg"},{"flour","1","cup"},{"egg","1","item"},{"sugar","2","tbsp"},{"cinnamon","1","tsp"},{"baking powder","1","tsp"},{"oil","2","tbsp"}},
                 {{"flour","3","cups"},{"sugar","0.5","cup"},{"yeast","1","tsp"},{"cinnamon","1","tsp"},{"ginger","1","tsp"},{"cardamom","0.5","tsp"},{"aniseed","1","tsp"},{"desiccated coconut","0.5","cup"},{"oil","2","cups"}},
                 {{"milk","4","cups"},{"vermicelli","0.5","cup"},{"butter","2","tbsp"},{"cardamom","0.5","tsp"},{"cinnamon","1","stick"},{"sultanas","0.25","cup"},{"sugar","0.25","cup"}},
                 {{"milk","4","cups"},{"egg","3","items"},{"sugar","0.75","cup"},{"flour","0.25","cup"},{"cornflour","0.25","cup"},{"pastry","1","shell"},{"cinnamon","1","tsp"}},
-                {{"rice","1","cup"},{"raisins","0.25","cup"},{"turmeric","0.5","tsp"},{"cinnamon","1","stick"},{"sugar","2","tbsp"},{"butter","1","tbsp"}},
                 {{"sago","0.5","cup"},{"milk","4","cups"},{"sugar","0.25","cup"},{"egg","1","item"},{"cinnamon","1","stick"}}
         };
 

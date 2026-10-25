@@ -2,7 +2,6 @@ package com.example.smartpantrymanager;
 
 import android.os.Bundle;
 import android.content.Intent;
-import android.database.Cursor;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -13,13 +12,26 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class SuggestedRecipesActivity extends AppCompatActivity {
+
     private PantryDatabaseHelper databaseHelper;
     private ListView listSuggestedRecipes;
     private TextView txtNoRecipes;
     private ArrayAdapter<String> adapter;
     private final ArrayList<String> recipeNames = new ArrayList<>();
+
+    private final String[] dessertRecipes = {
+            "Cinnamon Pumpkin",
+            "Cape Malay Pumpkin Fritters",
+            "Cape Malay Koesisters",
+            "Boeber",
+            "Cape Malay Milk Tart",
+            "Sweet Yellow Rice",
+            "Cape Malay Sago Pudding"
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,50 +52,99 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
         );
 
         listSuggestedRecipes.setAdapter(adapter);
-        listSuggestedRecipes.setOnItemClickListener((parent, view, position, id) ->{
-            String selectedRecipe = recipeNames.get(position);
-            int recipeId = databaseHelper.getRecipeIdByName(selectedRecipe);
 
-            if(recipeId != -1){
+        listSuggestedRecipes.setOnItemClickListener((parent, view, position, id) -> {
+            String selectedItem = recipeNames.get(position);
+
+            // Ignore category headings.
+            if (selectedItem.startsWith("— ")) {
+                return;
+            }
+
+            int recipeId = databaseHelper.getRecipeIdByName(selectedItem);
+
+            if (recipeId != -1) {
                 Intent intent = new Intent(
                         SuggestedRecipesActivity.this,
                         RecipeDetailActivity.class
                 );
+
                 intent.putExtra("recipe_id", recipeId);
                 startActivity(intent);
             }
         });
 
         btnBackToPantry.setOnClickListener(v -> finish());
+
         loadSuggestedRecipes();
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
 
-        if(databaseHelper != null && adapter != null){
+        if (databaseHelper != null && adapter != null) {
             loadSuggestedRecipes();
         }
     }
 
-    private void loadSuggestedRecipes(){
+    private void loadSuggestedRecipes() {
+        List<String> matchingRecipes = databaseHelper.getMatchingRecipes();
+
+        Collections.sort(matchingRecipes);
+
+        List<String> mains = new ArrayList<>();
+        List<String> desserts = new ArrayList<>();
+
+        for (String recipe : matchingRecipes) {
+            if (isDessert(recipe)) {
+                desserts.add(recipe);
+            } else {
+                mains.add(recipe);
+            }
+        }
+
         recipeNames.clear();
-        recipeNames.addAll(databaseHelper.getMatchingRecipes());
+
+        if (!mains.isEmpty()) {
+            recipeNames.add("— MAINS —");
+            recipeNames.addAll(mains);
+        }
+
+        if (!desserts.isEmpty()) {
+            recipeNames.add("— DESSERTS —");
+            recipeNames.addAll(desserts);
+        }
+
         adapter.notifyDataSetChanged();
 
-        boolean noRecipes = recipeNames.isEmpty();
+        boolean noRecipes = matchingRecipes.isEmpty();
+
         txtNoRecipes.setVisibility(noRecipes ? View.VISIBLE : View.GONE);
-        listSuggestedRecipes.setVisibility(
-                noRecipes ? View.GONE : View.VISIBLE
-        );
+        listSuggestedRecipes.setVisibility(noRecipes ? View.GONE : View.VISIBLE);
+
+        if (noRecipes) {
+            txtNoRecipes.setText(
+                    "No recipes match your pantry yet. Add ingredients or update their quantities to see suggestions."
+            );
+        }
+    }
+
+    private boolean isDessert(String recipeName) {
+        for (String dessert : dessertRecipes) {
+            if (dessert.equalsIgnoreCase(recipeName)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override
-    protected void onDestroy(){
+    protected void onDestroy() {
         super.onDestroy();
 
-        if(databaseHelper != null){
+        if (databaseHelper != null) {
             databaseHelper.close();
         }
     }
