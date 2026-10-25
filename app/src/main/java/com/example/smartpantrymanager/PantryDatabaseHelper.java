@@ -1,4 +1,3 @@
-
 package com.example.smartpantrymanager;
 
 import android.content.ContentValues;
@@ -142,28 +141,124 @@ public class PantryDatabaseHelper extends SQLiteOpenHelper implements AutoClosea
 
         db.beginTransaction();
 
-        try {
             String[][] recipes = {
-                    {"Vegetable Fried Rice", "Cook rice. Stir-fry vegetables, add rice and soy sauce."},
-                    {"Tomato Pasta", "Boil pasta. Cook tomatoes with garlic and mix with pasta."},
-                    {"Pancakes", "Mix flour, milk and egg. Cook portions in a lightly oiled pan."},
-                    {"Omelette", "Beat eggs and cook in a pan. Add cheese if available."},
-                    {"Banana Smoothie", "Blend banana and milk until smooth."},
-                    {"Peanut Butter Toast", "Toast bread and spread peanut butter."},
-                    {"Garlic Rice", "Cook rice and stir-fry with garlic and oil."},
-                    {"Cheese Sandwich", "Place cheese between bread slices and toast."},
-                    {"Tomato Egg Scramble", "Cook chopped tomatoes, add beaten eggs and stir."},
-                    {"Simple Salad", "Chop cucumber and tomato, then mix together."},
-                    {"French Toast", "Dip bread in beaten egg and milk, then fry."},
-                    {"Milk Porridge", "Cook oats in milk until thick."},
-                    {"Flour Flatbread", "Mix flour and water, shape dough and cook in a pan."},
-                    {"Egg Fried Rice", "Stir-fry cooked rice with egg and vegetables."},
-                    {"Banana Pancakes", "Mash banana, mix with egg and flour, then fry."},
-                    {"Tomato Cheese Toast", "Add tomato and cheese to bread and toast."},
-                    {"Peanut Banana Toast", "Spread peanut butter on bread and add banana slices."},
-                    {"Garlic Pasta", "Boil pasta and toss with cooked garlic and oil."},
-                    {"Cucumber Sandwich", "Place sliced cucumber between bread slices."},
-                    {"Oat Banana Bowl", "Mix oats, banana and milk in a bowl."}
+                    {"Vegetable Fried Rice",
+                            "Cook the rice.\n" +
+                                    "Stir-fry the vegetables.\n" +
+                                    "Add the cooked rice and soy sauce, then mix well."},
+
+                    {"Tomato Pasta",
+                            "Boil the pasta until tender.\n" +
+                                    "Cook the tomatoes with garlic.\n" +
+                                    "Add the pasta and mix well."},
+
+                    {"Pancakes",
+                            "Combine the flour, milk and egg in a bowl.\n" +
+                                    "Mix thoroughly until the batter is smooth.\n" +
+                                    "Pour some batter into a lightly oiled pan.\n" +
+                                    "Cook both sides until golden brown."},
+
+                    {"Omelette",
+                            "Crack the eggs into a bowl and beat them.\n" +
+                                    "Heat a lightly oiled pan.\n" +
+                                    "Pour in the eggs and cook until almost set.\n" +
+                                    "Add cheese if available, fold and serve."},
+
+                    {"Banana Smoothie",
+                            "Peel the banana and break it into pieces.\n" +
+                                    "Add the banana and milk to a blender.\n" +
+                                    "Blend until smooth.\n" +
+                                    "Pour into a glass and serve."},
+
+                    {"Peanut Butter Toast",
+                            "Place the bread in a toaster or toast it in a pan.\n" +
+                                    "Spread peanut butter over the toasted bread.\n" +
+                                    "Serve immediately."},
+
+                    {"Garlic Rice",
+                            "Cook the rice until tender.\n" +
+                                    "Heat oil in a pan and add the garlic.\n" +
+                                    "Stir-fry the garlic until fragrant.\n" +
+                                    "Add the cooked rice and mix well."},
+
+                    {"Cheese Sandwich",
+                            "Place the cheese between two slices of bread.\n" +
+                                    "Heat a pan or sandwich toaster.\n" +
+                                    "Toast until the bread is golden and the cheese melts.\n" +
+                                    "Cut and serve."},
+
+                    {"Tomato Egg Scramble",
+                            "Wash and chop the tomato.\n" +
+                                    "Cook the tomato in a lightly oiled pan.\n" +
+                                    "Beat the eggs in a bowl.\n" +
+                                    "Add the eggs to the pan and stir until cooked."},
+
+                    {"Simple Salad",
+                            "Wash the cucumber, tomato and lettuce.\n" +
+                                    "Chop the cucumber and tomato.\n" +
+                                    "Tear or chop the lettuce into smaller pieces.\n" +
+                                    "Combine everything in a bowl and mix."},
+
+                    {"French Toast",
+                            "Beat the egg and milk together in a bowl.\n" +
+                                    "Dip each slice of bread into the mixture.\n" +
+                                    "Heat a lightly oiled pan.\n" +
+                                    "Fry both sides until golden brown."},
+
+                    {"Milk Porridge",
+                            "Add the oats and milk to a saucepan.\n" +
+                                    "Heat over a low to medium heat.\n" +
+                                    "Stir regularly until the oats soften and the mixture thickens.\n" +
+                                    "Allow to cool slightly before serving."},
+
+                    {"Flour Flatbread",
+                            "Place the flour in a bowl.\n" +
+                                    "Gradually add water and mix to form a dough.\n" +
+                                    "Knead the dough until smooth.\n" +
+                                    "Divide and flatten into thin rounds.\n" +
+                                    "Cook in a hot pan until both sides are lightly browned."},
+
+                    {"Egg Fried Rice",
+                            "Cook the rice and allow it to cool slightly.\n" +
+                                    "Heat oil in a pan and cook the vegetables.\n" +
+                                    "Add the egg and stir until cooked.\n" +
+                                    "Add the rice and stir-fry everything together."},
+
+                    {"Banana Pancakes",
+                            "Peel and mash the banana in a bowl.\n" +
+                                    "Add the egg and flour.\n" +
+                                    "Mix until the batter is combined.\n" +
+                                    "Cook small portions in a lightly oiled pan until both sides are golden."},
+
+                    {"Tomato Cheese Toast",
+                            "Wash and slice the tomato.\n" +
+                                    "Place the tomato and cheese on the bread.\n" +
+                                    "Toast in a pan or sandwich toaster.\n" +
+                                    "Cook until the cheese melts and serve."},
+
+                    {"Peanut Banana Toast",
+                            "Toast the bread until lightly golden.\n" +
+                                    "Spread peanut butter over the toast.\n" +
+                                    "Peel and slice the banana.\n" +
+                                    "Arrange the banana slices on top and serve."},
+
+                    {"Garlic Pasta",
+                            "Boil the pasta until tender, then drain it.\n" +
+                                    "Heat oil in a pan.\n" +
+                                    "Add the chopped garlic and cook until fragrant.\n" +
+                                    "Add the pasta and toss until evenly coated."},
+
+                    {"Cucumber Sandwich",
+                            "Wash the cucumber and slice it thinly.\n" +
+                                    "Arrange the cucumber slices on a piece of bread.\n" +
+                                    "Place the second slice of bread on top.\n" +
+                                    "Cut the sandwich and serve."},
+
+                    {"Oat Banana Bowl",
+                            "Place the oats in a bowl.\n" +
+                                    "Peel and slice the banana.\n" +
+                                    "Add the banana and milk to the oats.\n" +
+                                    "Mix well and serve."}
             };
 
             String[][][] ingredients = {
@@ -209,13 +304,77 @@ public class PantryDatabaseHelper extends SQLiteOpenHelper implements AutoClosea
             }
 
             db.setTransactionSuccessful();
+        }
+
+    public void updateRecipeInstructions() {
+        SQLiteDatabase db = getWritableDatabase();
+
+        String[][] recipes = {
+                {"Vegetable Fried Rice",
+                        "Cook the rice.\nStir-fry the vegetables.\nAdd the cooked rice and soy sauce, then mix well."},
+                {"Tomato Pasta",
+                        "Boil the pasta until tender.\nCook the tomatoes with garlic.\nAdd the pasta and mix well."},
+                {"Pancakes",
+                        "Combine the flour, milk and egg in a bowl.\nMix thoroughly until smooth.\nPour the batter into a lightly oiled pan.\nCook both sides until golden brown."},
+                {"Omelette",
+                        "Crack the eggs into a bowl and beat them.\nHeat a lightly oiled pan.\nPour in the eggs and cook until almost set.\nAdd cheese if available, fold and serve."},
+                {"Banana Smoothie",
+                        "Peel and break the banana into pieces.\nAdd the banana and milk to a blender.\nBlend until smooth.\nPour into a glass and serve."},
+                {"Peanut Butter Toast",
+                        "Toast the bread.\nSpread peanut butter over the toast.\nServe immediately."},
+                {"Garlic Rice",
+                        "Cook the rice until tender.\nHeat oil in a pan and add the garlic.\nStir-fry until fragrant.\nAdd the cooked rice and mix well."},
+                {"Cheese Sandwich",
+                        "Place the cheese between two slices of bread.\nHeat a pan or sandwich toaster.\nToast until golden and the cheese melts.\nCut and serve."},
+                {"Tomato Egg Scramble",
+                        "Wash and chop the tomato.\nCook the tomato in a lightly oiled pan.\nBeat the eggs in a bowl.\nAdd the eggs and stir until cooked."},
+                {"Simple Salad",
+                        "Wash the cucumber, tomato and lettuce.\nChop the cucumber and tomato.\nTear or chop the lettuce.\nCombine everything in a bowl and mix."},
+                {"French Toast",
+                        "Beat the egg and milk together.\nDip each slice of bread into the mixture.\nHeat a lightly oiled pan.\nFry both sides until golden brown."},
+                {"Milk Porridge",
+                        "Add the oats and milk to a saucepan.\nHeat over low to medium heat.\nStir until the oats soften and the mixture thickens.\nAllow to cool slightly before serving."},
+                {"Flour Flatbread",
+                        "Place the flour in a bowl.\nGradually add water and mix into a dough.\nKnead the dough until smooth.\nDivide and flatten into rounds.\nCook in a hot pan until both sides are lightly browned."},
+                {"Egg Fried Rice",
+                        "Cook the rice and allow it to cool slightly.\nHeat oil in a pan and cook the vegetables.\nAdd the egg and stir until cooked.\nAdd the rice and stir-fry everything together."},
+                {"Banana Pancakes",
+                        "Peel and mash the banana.\nAdd the egg and flour.\nMix until combined.\nCook small portions in a lightly oiled pan until both sides are golden."},
+                {"Tomato Cheese Toast",
+                        "Wash and slice the tomato.\nPlace the tomato and cheese on the bread.\nToast in a pan or sandwich toaster.\nCook until the cheese melts and serve."},
+                {"Peanut Banana Toast",
+                        "Toast the bread.\nSpread peanut butter over the toast.\nPeel and slice the banana.\nArrange the banana slices on top and serve."},
+                {"Garlic Pasta",
+                        "Boil the pasta until tender, then drain it.\nHeat oil in a pan.\nAdd the garlic and cook until fragrant.\nAdd the pasta and toss until coated."},
+                {"Cucumber Sandwich",
+                        "Wash and slice the cucumber thinly.\nArrange the cucumber slices on a piece of bread.\nPlace the second slice of bread on top.\nCut and serve."},
+                {"Oat Banana Bowl",
+                        "Place the oats in a bowl.\nPeel and slice the banana.\nAdd the banana and milk to the oats.\nMix well and serve."}
+        };
+
+        db.beginTransaction();
+
+        try {
+            for (String[] recipe : recipes) {
+                ContentValues values = new ContentValues();
+                values.put("instructions", recipe[1]);
+
+                db.update(
+                        "recipes",
+                        values,
+                        "name = ?",
+                        new String[]{recipe[0]}
+                );
+            }
+
+            db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
         }
     }
     public ArrayList<String> getMatchingRecipes() {
-        ArrayList<String> matchingRecipes = new ArrayList<>();
-        SQLiteDatabase db = getReadableDatabase();
+            ArrayList<String> matchingRecipes = new ArrayList<>();
+            SQLiteDatabase db = getReadableDatabase();
 
         String recipeQuery = "SELECT id, name FROM recipes";
 
