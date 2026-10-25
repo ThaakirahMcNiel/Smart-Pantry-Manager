@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         databaseHelper = new PantryDatabaseHelper(this);
         databaseHelper.seedRecipes();
+        databaseHelper.updateRecipeInstructions();
 
         adapter = new PantryAdapter(this, pantryItems);
         listPantry.setAdapter(adapter);

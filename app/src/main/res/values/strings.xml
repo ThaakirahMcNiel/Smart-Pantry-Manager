@@ -44,5 +44,5 @@
         <item>@string/dietary_vegan</item>
         <item>@string/dietary_gluten_free</item>
     </string-array>
-
+<string name="delete_ingredient">Delete Ingredient</string>
 </resources>
